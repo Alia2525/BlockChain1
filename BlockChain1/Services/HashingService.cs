@@ -12,7 +12,7 @@ namespace BlockChain1.Services
     {
         public string ComputeHash(Block block)
         {
-            var input = $"{block.Index}{block.Timestamp.ToString("0")}{block.Data}{block.PreviousHash}";
+            var input = $"{block.Index}{block.Timestamp.ToString("o")}{block.Data}{block.PreviousHash}";
             return ComputeHash(input);
         }
         // Мясорубка для рядків. Вона приймає рядок і повертає його хеш.

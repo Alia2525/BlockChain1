@@ -12,9 +12,9 @@ namespace BlockChain1.Services
         public List<Block> Chain { get; set; } // список блоків у ланцюзі
         private readonly HashingService _hashingService;  // сервіс для обчислення хешів
 
-        public BlockChainService(HashingService hashingService)
+        public BlockChainService()
         {
-            _hashingService = hashingService;
+            _hashingService = new HashingService();
             Chain = new List<Block>(); 
             CreateGenesisBlock();// створюємо генезис-блок
         }
