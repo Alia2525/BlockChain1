@@ -21,20 +21,32 @@ namespace BlockChain1.Services
 
         private void CreateGenesisBlock()
         {
-            var genesisBlock = new Block(0, DateTime.UtcNow, "Genesis Block", "0"); // створюємо генезис-блок з індексом 0, поточним часом, даними "Genesis Block" та попереднім хешем "0"
-            genesisBlock.Hash = _hashingService.ComputeHash(genesisBlock);// обчислюємо хеш генезис-блоку
+            var genesisBlock = new Block(
+                0,
+                DateTime.UtcNow,
+                "Genesis Block",
+                "System",
+                "0");
+
+            genesisBlock.Hash = _hashingService.ComputeHash(genesisBlock);
+
             Chain.Add(genesisBlock);
         }
 
-        public void AddBlock(string data)
+        public void AddBlock(string data, string author)
         {
-            var previousBlock = Chain.Last(); // отримуємо останній блок у ланцюзі
-            var newIndex = previousBlock.Index + 1; // індекс нового блоку на 1 більший за попередній
-            var newTimestamp = DateTime.UtcNow; // поточний час
-            var newPreviousHash = previousBlock.Hash; // хеш попереднього блоку
-            var newBlock = new Block(newIndex, newTimestamp, data, newPreviousHash); // створюємо новий блок з індексом на 1 більшим за попередній, поточним часом, переданими даними та хешем попереднього блоку
-            newBlock.Hash = _hashingService.ComputeHash(newBlock); // обчислюємо хеш нового блоку
-            Chain.Add(newBlock); // додаємо новий блок до ланцюга
+            var previousBlock = Chain.Last();
+
+            var newBlock = new Block(
+                previousBlock.Index + 1,
+                DateTime.UtcNow,
+                data,
+                author,
+                previousBlock.Hash);
+
+            newBlock.Hash = _hashingService.ComputeHash(newBlock);
+
+            Chain.Add(newBlock);
         }
 
         public bool IsValid()

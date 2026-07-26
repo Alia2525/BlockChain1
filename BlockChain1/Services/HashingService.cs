@@ -7,14 +7,21 @@ using System.Threading.Tasks;
 
 namespace BlockChain1.Services
 {
-    // Мясорубка для блоків. Вона приймає блок і повертає його хеш.
     public class HashingService
     {
+        // Мясорубка для блоків. Вона приймає блок і повертає його хеш.
         public string ComputeHash(Block block)
         {
-            var input = $"{block.Index}{block.Timestamp.ToString("o")}{block.Data}{block.PreviousHash}";
+            var input =
+                $"{block.Index}" +
+                $"{block.Timestamp:o}" +
+                $"{block.Data}" +
+                $"{block.Author}" +
+                $"{block.PreviousHash}";
+
             return ComputeHash(input);
         }
+
         // Мясорубка для рядків. Вона приймає рядок і повертає його хеш.
         public string ComputeHash(string input)
         {
@@ -25,6 +32,5 @@ namespace BlockChain1.Services
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             }
         }
-
     }
 }
