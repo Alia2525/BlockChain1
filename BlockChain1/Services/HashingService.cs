@@ -17,7 +17,8 @@ namespace BlockChain1.Services
                 $"{block.Timestamp:o}" +
                 $"{block.Data}" +
                 $"{block.Author}" +
-                $"{block.PreviousHash}";
+                $"{block.PreviousHash}" +
+                $"{block.Nonce}";
 
             return ComputeHash(input);
         }

@@ -16,9 +16,11 @@ namespace BlockChain1.Models
 
         public string Author { get; set; }
 
-        public string Hash { get; set; }
+        public string Hash { get; set; } = string.Empty;
 
         public string PreviousHash { get; set; }
+
+        public int Nonce { get; set; }
 
         public Block(
             int index,

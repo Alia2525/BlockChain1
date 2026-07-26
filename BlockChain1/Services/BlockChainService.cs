@@ -11,11 +11,14 @@ namespace BlockChain1.Services
     {
         public List<Block> Chain { get; set; } // список блоків у ланцюзі
         private readonly HashingService _hashingService;  // сервіс для обчислення хешів
+        private readonly MiningService _miningService; // сервіс для майнінгу блоків
 
+        public int Difficulty { get; set; } = 4; // рівень складності майнінгу (кількість нулів на початку хешу)
         public BlockChainService()
         {
             _hashingService = new HashingService();
-            Chain = new List<Block>(); 
+            _miningService = new MiningService(_hashingService);
+            Chain = new List<Block>();
             CreateGenesisBlock();// створюємо генезис-блок
         }
 
@@ -28,6 +31,7 @@ namespace BlockChain1.Services
                 "System",
                 "0");
 
+            _miningService.MineBlock(genesisBlock, Difficulty); // майнінг генезис-блоку
             genesisBlock.Hash = _hashingService.ComputeHash(genesisBlock);
 
             Chain.Add(genesisBlock);
@@ -44,7 +48,7 @@ namespace BlockChain1.Services
                 author,
                 previousBlock.Hash);
 
-            newBlock.Hash = _hashingService.ComputeHash(newBlock);
+            _miningService.MineBlock(newBlock, Difficulty); // майнінг нового блоку
 
             Chain.Add(newBlock);
         }
@@ -64,6 +68,10 @@ namespace BlockChain1.Services
                 if (currentBlock.PreviousHash != previousBlock.Hash)
                 {
                     return false;
+                }
+                if (!currentBlock.Hash.StartsWith(new string('0', Difficulty)))
+                {
+                    return false; // перевірка на складність майнінгу
                 }
             }
             return true;
