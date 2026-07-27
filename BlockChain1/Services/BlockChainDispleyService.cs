@@ -15,6 +15,7 @@ namespace BlockChain1.Services
             {
                 Console.WriteLine($"Index: {block.Index}");
                 Console.WriteLine($"Timestamp: {block.Timestamp}");
+                Console.WriteLine($"Author: {block.Author}");
                 Console.WriteLine($"Data: {block.Data}");
                 Console.WriteLine($"Hash: {block.Hash}");
                 Console.WriteLine($"Nonce: {block.Nonce}");

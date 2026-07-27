@@ -20,7 +20,7 @@ namespace BlockChain1.Models
 
         public string PreviousHash { get; set; }
 
-        public int Nonce { get; set; }
+        public long Nonce { get; set; }
 
         public Block(
             int index,
