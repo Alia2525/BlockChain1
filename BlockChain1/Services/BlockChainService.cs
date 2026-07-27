@@ -9,17 +9,22 @@ namespace BlockChain1.Services
 {
     public class BlockChainService
     {
-        public List<Block> Chain { get; set; } // список блоків у ланцюзі
-        private readonly HashingService _hashingService;  // сервіс для обчислення хешів
-        private readonly MiningService _miningService; // сервіс для майнінгу блоків
+        public List<Block> Chain { get; set; }
 
-        public int Difficulty { get; set; } = 4; // рівень складності майнінгу (кількість нулів на початку хешу)
+        private readonly HashingService _hashingService;
+        private readonly MiningService _miningService;
+
+        // Префікс, який має починатися хеш
+        public string TargetPrefix { get; set; } = "cafe";
+
         public BlockChainService()
         {
             _hashingService = new HashingService();
             _miningService = new MiningService(_hashingService);
+
             Chain = new List<Block>();
-            CreateGenesisBlock();// створюємо генезис-блок
+
+            CreateGenesisBlock();
         }
 
         private void CreateGenesisBlock()
@@ -31,8 +36,7 @@ namespace BlockChain1.Services
                 "System",
                 "0");
 
-            _miningService.MineBlock(genesisBlock, Difficulty); // майнінг генезис-блоку
-            genesisBlock.Hash = _hashingService.ComputeHash(genesisBlock);
+            _miningService.MineBlock(genesisBlock, TargetPrefix);
 
             Chain.Add(genesisBlock);
         }
@@ -48,7 +52,7 @@ namespace BlockChain1.Services
                 author,
                 previousBlock.Hash);
 
-            _miningService.MineBlock(newBlock, Difficulty); // майнінг нового блоку
+            _miningService.MineBlock(newBlock, TargetPrefix);
 
             Chain.Add(newBlock);
         }
@@ -59,21 +63,17 @@ namespace BlockChain1.Services
             {
                 var currentBlock = Chain[i];
                 var previousBlock = Chain[i - 1];
-                // Перевіряємо, чи хеш поточного блоку правильний
+
                 if (currentBlock.Hash != _hashingService.ComputeHash(currentBlock))
-                {
                     return false;
-                }
-                // Перевіряємо, чи попередній хеш поточного блоку збігається з хешем попереднього блоку
+
                 if (currentBlock.PreviousHash != previousBlock.Hash)
-                {
                     return false;
-                }
-                if (!currentBlock.Hash.StartsWith(new string('0', Difficulty)))
-                {
-                    return false; // перевірка на складність майнінгу
-                }
+
+                if (!currentBlock.Hash.StartsWith(TargetPrefix))
+                    return false;
             }
+
             return true;
         }
     }
