@@ -22,6 +22,10 @@ namespace BlockChain1.Models
 
         public long Nonce { get; set; }
 
+        public double MiningDuration { get; set; }
+
+        public int Difficulty { get; set; }
+
         public Block(
             int index,
             DateTime timestamp,

@@ -33,8 +33,9 @@ namespace BlockChain1.Services
 
                 block.Nonce++;
             }
-
+            block.MiningDuration = startTime.ElapsedMilliseconds;
             return block.Nonce;
+            
         }
     }
 }

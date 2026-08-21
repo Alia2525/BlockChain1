@@ -20,6 +20,7 @@ namespace BlockChain1.Services
                 Console.WriteLine($"Hash: {block.Hash}");
                 Console.WriteLine($"Nonce: {block.Nonce}");
                 Console.WriteLine($"Previous Hash: {block.PreviousHash}");
+                Console.WriteLine($"Difficulty: {block.Difficulty}");
                 Console.WriteLine(new string('-', 50));
             }
         }

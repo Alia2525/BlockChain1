@@ -16,7 +16,8 @@ namespace BlockChain1.Services
                 $"{block.Data}" +
                 $"{block.Author}" +
                 $"{block.PreviousHash}" +
-                $"{block.Nonce}";
+                $"{block.Nonce}" +
+                $"{block.Difficulty}" ;
 
             using SHA256 sha256 = SHA256.Create();
 

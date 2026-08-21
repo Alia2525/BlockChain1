@@ -14,8 +14,9 @@ namespace BlockChain1.Services
         private readonly MiningService _miningService;
 
         // Складність майнінгу
-        public int Difficulty { get; set; } = 3;
-
+        public int Difficulty { get; set; } = 1;
+        private readonly int _targetTimePerBlock = 2000; // 2 секунди
+        private readonly int _adjustmentInterval = 2; // Кількість блоків для корекції складності
         public BlockChainService()
         {
             Chain = new List<Block>();
@@ -51,27 +52,50 @@ namespace BlockChain1.Services
                 author,
                 previous.Hash);
 
+            newBlock.Difficulty = Difficulty;
             _miningService.MineBlock(newBlock, Difficulty);
 
             Chain.Add(newBlock);
+
+            if (newBlock.Index % _adjustmentInterval == 0)
+            {
+                AdjustDifficulty();
+            }
+        }
+
+        private void AdjustDifficulty()
+        {
+            var recentBlocks = Chain.Skip(Chain.Count - _adjustmentInterval).Take(_adjustmentInterval).ToList();
+            var avgTime = recentBlocks.Average(b => b.MiningDuration);
+
+            if (avgTime < _targetTimePerBlock)
+            {
+                Difficulty++;
+                Console.WriteLine($"Difficulty increased to {Difficulty}");
+            }
+            else if (avgTime > _targetTimePerBlock)
+            {
+                Difficulty--;
+                
+            }
         }
 
         public bool IsValid()
         {
             for (int i = 1; i < Chain.Count; i++)
             {
-                Block current = Chain[i];
+                Block currentBlock = Chain[i];
                 Block previous = Chain[i - 1];
 
-                string hash = _hashingService.ComputeHash(current);
+                string hash = _hashingService.ComputeHash(currentBlock);
 
-                if (current.Hash != hash)
+                if (currentBlock.Hash != hash)
                     return false;
 
-                if (current.PreviousHash != previous.Hash)
+                if (currentBlock.PreviousHash != previous.Hash)
                     return false;
 
-                if (!current.Hash.StartsWith(new string('0', Difficulty)))
+                if (!currentBlock.Hash.StartsWith(new string('0', currentBlock.Difficulty)))
                     return false;
             }
 
